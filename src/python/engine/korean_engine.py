@@ -139,8 +139,6 @@ class KoreanSpeechEngine:
         if not self.is_recording:
             return False
         
-        print(f"🔄 오디오 청크 처리 중: {len(audio_chunk)} 샘플")
-        
         # 오디오 청크를 스트림 핸들러에 전달
         result = self.stream_handler.process_chunk(audio_chunk)
         
@@ -149,9 +147,11 @@ class KoreanSpeechEngine:
             # 참조 텍스트가 있는 경우 실시간 발음 평가 수행
             if self.reference_text and hasattr(self, 'reference_phonemes'):
                 try:
+                    print(f"🔄 실시간 결과 ctc_probs: {result['ctc_probs']}")
                     # 부분 정렬 및 점수 계산
                     alignment = self.forced_aligner.align(result['ctc_probs'], self.reference_phonemes)
                     gop_scores = self.gop_calculator.calculate(alignment, result['ctc_probs'])
+                    print(f"🔄 실시간 결과 gop_scores: {gop_scores}")
                     
                     # 실시간 부분 결과 생성
                     interim_result = self._generate_interim_result(

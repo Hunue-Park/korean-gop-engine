@@ -105,7 +105,7 @@ class StreamHandler:
                     # 오디오 데이터 직접 전달 (특성 대신)
                     result = self.model.infer(recent_audio)
                     print(f"✅ 모델 추론 완료")
-                    return {"success": True}  # 임시 결과
+                    return {"success": True, "ctc_probs": result}  # 임시 결과
             
             except Exception as e:
                 print(f"⚠️ 실시간 추론 오류: {e}")
