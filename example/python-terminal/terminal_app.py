@@ -95,6 +95,7 @@ class AudioCapture:
             
             # 외부 콜백이 있으면 호출
             if self.user_callback:
+                print(f"콜백 호출 - 데이터 크기: {indata.shape}")  # 디버깅 로그 추가
                 self.user_callback(indata.flatten())
     
     def start_recording(self, callback=None) -> bool:
@@ -341,11 +342,15 @@ class TerminalApp(SpeechEngineDelegate):
         """오디오 데이터 콜백"""
         current_time = time.time()
         
-        # 일정 간격으로 볼륨 미터 업데이트
-        if current_time - self.last_volume_update >= self.volume_update_interval:
-            meter = AudioLevelMeter.get_meter(audio_data)
-            print(f"\r볼륨: {meter}", end="")
-            self.last_volume_update = current_time
+        # 볼륨 미터 업데이트
+        meter = AudioLevelMeter.get_meter(audio_data)
+        print(f"\r볼륨: {meter}", end="")
+        self.last_volume_update = current_time
+        
+        # 중요: 여기서 엔진에 오디오 데이터 전달이 누락됨
+        # 다음 코드를 추가해야 함
+        if self.is_recording and self.engine:
+            self.engine.process_audio_chunk(audio_data)
     
     def show_results(self) -> None:
         """평가 결과 표시"""

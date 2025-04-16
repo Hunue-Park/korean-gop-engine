@@ -4,6 +4,8 @@ import time
 import json
 import numpy as np
 from typing import Dict, List, Optional, Callable, Any
+# 실제 Korean 엔진 불러오기 시도
+from src.python.engine.korean_engine import KoreanSpeechEngine
 
 class SpeechEngineDelegate:
     """음성 인식 엔진으로부터 결과를 받기 위한 델리게이트 인터페이스"""
@@ -215,6 +217,58 @@ _shared_instance = None
 def get_instance() -> SpeechEngine:
     """음성 인식 엔진 싱글톤 인스턴스 가져오기"""
     global _shared_instance
+    print("🔄 get_instance 호출됨")
     if _shared_instance is None:
-        _shared_instance = SpeechEngine()
+        print("🔄 _shared_instance가 None입니다. 새로운 인스턴스 생성 시도")
+        try:
+            
+            
+            # 엔진 어댑터 클래스 생성
+            class KoreanEngineAdapter(SpeechEngine):
+                """KoreanSpeechEngine을 SpeechEngine 인터페이스에 맞게 어댑터"""
+                
+                def __init__(self):
+                    super().__init__()
+                    self.korean_engine = KoreanSpeechEngine()
+                
+                def set_delegate(self, delegate: SpeechEngineDelegate) -> None:
+                    self.delegate = delegate
+                    self.korean_engine.set_delegate(delegate)
+                
+                def init_engine(self, app_key: str, secret_key: str, user_id: Optional[str] = None) -> bool:
+                    result = self.korean_engine.init_engine(app_key, secret_key, user_id)
+                    self.is_initialized = result
+                    return result
+                
+                def start(self, reference_text: str = None) -> bool:
+                    result = self.korean_engine.start(reference_text)
+                    self.is_recording = result
+                    if result:
+                        self.last_record_path = self.korean_engine.get_last_record_path()
+                    return result
+                
+                def process_audio_chunk(self, audio_data) -> bool:
+                    """오디오 청크 처리 - korean_engine에 전달"""
+                    return self.korean_engine.process_audio_chunk(audio_data)
+                
+                def stop(self) -> bool:
+                    return self.korean_engine.stop()
+                
+                def cancel(self) -> bool:
+                    return self.korean_engine.cancel()
+                
+                def get_last_record_path(self) -> Optional[str]:
+                    return self.korean_engine.get_last_record_path()
+                
+                def get_engine_status(self) -> bool:
+                    return self.korean_engine.get_engine_status()
+            
+            _shared_instance = KoreanEngineAdapter()
+            print("한국어 음성 인식 엔진이 성공적으로 로드되었습니다.")
+            
+        except ImportError as e:
+            print(f"한국어 엔진 로드 실패: {e}. 기본 엔진을 사용합니다.")
+            _shared_instance = SpeechEngine()
+    
+    print("🔄 get_instance 반환 중")
     return _shared_instance

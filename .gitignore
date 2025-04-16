@@ -2,3 +2,4 @@
 /temp.m
 /example/python-terminal/__pycache__
 /example/python-terminal/recordings
+/models/wav2vec2_quantized.onnx
