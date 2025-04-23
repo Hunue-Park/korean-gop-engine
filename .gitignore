@@ -1,5 +1,6 @@
 /venv
 /temp.m
-/example/python-terminal/__pycache__
-/example/python-terminal/recordings
-/models/wav2vec2_quantized.onnx
+/example/python-audio-app/__pycache__
+/example/python-audio-app/recordings
+/models/wav2vec2_ctc_dynamic.onnx
+/recordings
