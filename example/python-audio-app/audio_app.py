@@ -6,7 +6,7 @@ import pyaudio
 import wave
 import pprint
 
-from realtime_engine_ko.recognition_engine import EngineCoordinator, RecordListener
+from pyrealtime import EngineCoordinator, RecordListener
 
 class RealtimeAudioRecorder:
     def __init__(self, output_dir, filename_prefix="recorded_audio_"):
@@ -208,7 +208,7 @@ def main():
     
     # 콜백 핸들러 생성
     callback_handler = EngineCallbackHandler()
-    engine.set_record_listener(callback_handler)
+    engine.SetRecordListener(callback_handler)
     
     # 녹음기 생성
     recorder = RealtimeAudioRecorder(OUTPUT_DIR)
@@ -232,10 +232,10 @@ def main():
                     recording = True
                     # 이미 평가 중이 아니면 초기화 및 평가 시작
                     if not evaluating:
-                        engine.initialize(REFERENCE_TEXT, audio_polling_interval=0.03, min_time_between_evals=0.5)
+                        engine.Initialize(REFERENCE_TEXT, audio_polling_interval=0.03, min_time_between_evals=0.5)
                         # 녹음이 시작되면 바로 평가도 시작
                         if recorder.current_file:
-                            engine.start_evaluation(recorder.current_file)
+                            engine.StartEvaluation(recorder.current_file)
                             evaluating = True
                 else:
                     # 녹음 종료
@@ -243,7 +243,7 @@ def main():
                     recording = False
                     # 평가 중지
                     if evaluating:
-                        engine.stop_evaluation()
+                        engine.StopEvaluation()
                         evaluating = False
                         # 최종 결과 출력
                         callback_handler.print_final_result()
@@ -251,7 +251,7 @@ def main():
                 if recording:
                     recorder.stop_recording()
                 if evaluating:
-                    engine.stop_evaluation()
+                    engine.StopEvaluation()
                 break
             else:
                 print("알 수 없는 명령어입니다. 'r'로 녹음 시작/종료, 'q'로 종료하세요.")
@@ -262,7 +262,7 @@ def main():
         if recording:
             recorder.stop_recording()
         if evaluating:
-            engine.stop_evaluation()
+            engine.StopEvaluation()
 
 
 if __name__ == "__main__":

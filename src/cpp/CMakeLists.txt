@@ -106,3 +106,29 @@ if(BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()
+
+# -------------------------
+# 1) pybind11 불러오기
+include(FetchContent)
+FetchContent_Declare(
+  pybind11
+  GIT_REPOSITORY https://github.com/pybind/pybind11.git
+  GIT_TAG        v2.11.1 # 원하는 버전
+)
+FetchContent_MakeAvailable(pybind11)
+
+# 2) 파이썬 모듈용 바인딩 타겟
+pybind11_add_module(pyrealtime
+   python_bindings.cpp
+)
+
+# 3) 기존 엔진 라이브러리와 링크
+target_link_libraries(pyrealtime
+  PRIVATE
+    realtime_engine_ko_cpp       # your static/shared lib target
+)
+
+target_include_directories(pyrealtime
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/realtime_engine_ko
+)
