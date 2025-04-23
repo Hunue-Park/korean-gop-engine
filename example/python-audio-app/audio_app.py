@@ -189,7 +189,7 @@ def main():
     # 설정
     MODEL_PATH = os.path.join(BASE_DIR, "models/wav2vec2_ctc_dynamic.onnx")
     TOKENIZER_PATH = os.path.join(BASE_DIR, "models/tokenizer.json")
-    REFERENCE_TEXT = "당신의 시간은 한정되어 있으니, 다른 사람의 인생을 사는 데 낭비하지 마라."
+    REFERENCE_TEXT = "미래는 그 누구도 알 수 없습니다. 어제를 돌아보면 비로소 내일이 보입니다. 지금껏 내가 이룬 것들이 내일과 이어진다는 믿음을 갖고 전진해야 합니다."
     OUTPUT_DIR = os.path.join(BASE_DIR, "recordings")
     
     # 출력 디렉토리 생성
@@ -201,7 +201,7 @@ def main():
     engine = EngineCoordinator(
         onnx_model_path=MODEL_PATH,
         tokenizer_path=TOKENIZER_PATH,
-        confidence_threshold=10,  # 약간 낮은 임계값 설정
+        confidence_threshold=30,  # 약간 낮은 임계값 설정
         update_interval=0.3  # 0.5초 간격으로 틱 이벤트
     )
     print("엔진 초기화 완료!")
