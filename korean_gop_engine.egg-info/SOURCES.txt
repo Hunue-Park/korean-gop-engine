@@ -1,5 +1,0 @@
-setup.py
-korean_gop_engine.egg-info/PKG-INFO
-korean_gop_engine.egg-info/SOURCES.txt
-korean_gop_engine.egg-info/dependency_links.txt
-korean_gop_engine.egg-info/top_level.txt
