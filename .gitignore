@@ -4,3 +4,5 @@
 /example/python-audio-app/recordings
 /models/wav2vec2_ctc_dynamic.onnx
 /recordings
+/src/cpp/build
+/src/cpp/third_party
